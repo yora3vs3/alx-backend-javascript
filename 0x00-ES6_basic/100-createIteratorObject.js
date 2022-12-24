@@ -1,10 +1,19 @@
-/* eslint-disable */
 export default function createIteratorObject(report) {
-    let employee = [];
-    for (let [depts, emplys] of Object.entries(report.allEmployees)) {
-        for (let emp of emplys) {
-            employee.push(emp);
-        }
-    }
-    return employee;
+  const all = Object.values(report.allEmployees).reduce((a, b) => {
+    a.push(...b);
+    return a;
+  }, []);
+  let currIndex = 0;
+  const maxIndex = all.length;
+  return {
+    next() {
+      if (currIndex < maxIndex) {
+        const result = { value: all[currIndex], done: false };
+        currIndex += 1;
+        return result;
+      }
+      return { value: null, done: true };
+    },
+    [Symbol.iterator]: () => this.next(),
+  };
 }
