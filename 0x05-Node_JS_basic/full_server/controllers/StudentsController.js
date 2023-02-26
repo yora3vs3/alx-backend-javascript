@@ -1,7 +1,7 @@
 const readDatabase = require('../utils');
 
 class StudentsController {
-  static getAllStudents(request, response) {
+  static getAllStudents(_request, response) {
     readDatabase(process.argv[2].toString()).then((students) => {
       const output = [];
       output.push('This is the list of our students');

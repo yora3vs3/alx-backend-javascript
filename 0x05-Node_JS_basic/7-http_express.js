@@ -46,10 +46,10 @@ function countStudents(fileName) {
   });
 }
 
-app.get('/', (request, response) => {
+app.get('/', (_request, response) => {
   response.send('Hello Holberton School!');
 });
-app.get('/students', (request, response) => {
+app.get('/students', (_request, response) => {
   countStudents(process.argv[2].toString()).then((output) => {
     response.send(['This is the list of our students', output].join('\n'));
   }).catch(() => {
