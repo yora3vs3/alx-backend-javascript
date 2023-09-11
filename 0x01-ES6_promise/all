@@ -1,0 +1,196 @@
+/* eslint-disable no-unused-vars */
+export default function getResponseFromAPI() {
+  return new Promise((_resolve, _reject) => {});
+}
+export default function getFullResponseFromAPI(success) {
+  return new Promise((resolve, reject) => {
+    if (success) resolve({ status: 200, body: 'Success' });
+    else reject(Error('The fake API is not working currently'));
+  });
+}
+export default function handleResponseFromAPI(promise) {
+  return promise.then(() => ({ status: 200, body: 'success' })).catch(() => Error()).finally(() => { console.log('Got a response from the API'); });
+}
+/* eslint-disable import/extensions */
+import { uploadPhoto, createUser } from './utils';
+
+export default function handleProfileSignup() {
+  const upload = uploadPhoto();
+  const create = createUser();
+  return Promise.all([upload, create]).then((result) => {
+    console.log(`${result[0].body} ${result[1].firstName} ${result[1].lastName}`);
+  }).catch(() => {
+    console.log('Signup system offline');
+  });
+}
+export default function signUpUser(firstName, lastName) {
+  return Promise.resolve({ firstName, lastName });
+}
+export default function uploadPhoto(filename) {
+  return Promise.reject(Error(`${filename} cannot be processed`));
+}
+import signUpUser from './4-user-promise';
+import uploadPhoto from './5-photo-reject';
+
+export default async function handleProfileSignup(firstName, lastName, fileName) {
+  const res = [];
+  try {
+    const user = await signUpUser(firstName, lastName);
+    res.push({ status: 'fulfilled', value: user });
+    await uploadPhoto(fileName);
+  } catch (err) {
+    res.push({
+      status: 'rejected',
+      value: `Error: ${fileName} cannot be processed`,
+    });
+  }
+  return res;
+}
+export default function loadBalancer(chinaDownload, USDownload) {
+  return Promise.race([chinaDownload, USDownload]).then((res) => res);
+}
+export default function divideFunction(numerator, denominator) {
+  if (denominator === 0) throw new Error('cannot divide by 0');
+  return numerator / denominator;
+}
+export default function guardrail(mathFunction) {
+  const queue = [];
+  try {
+    const res = mathFunction();
+    queue.push(res);
+  } catch (err) {
+    queue.push(err.toString());
+  } finally {
+    queue.push('Guardrail was processed');
+  }
+  return queue;
+}
+import { uploadPhoto, createUser } from './utils';
+
+export default async function asyncUploadUser() {
+  try {
+    const resFromUploadPhoto = await uploadPhoto();
+    const resFromCreateUser = await createUser();
+    return {
+      photo: resFromUploadPhoto,
+      user: resFromCreateUser,
+    };
+  } catch
+  (err) {
+    return {
+      photo: null,
+      user: null,
+    };
+  }
+}
+A promise in ES6 JavaScript is used to represent a value that might be available now, in the future, or never, and allows you to handle asynchronous operations more easily. Here's a simple one-liner example:
+
+javascript
+Copy code
+const fetchData = () => fetch('https://api.example.com/data').then(response => response.json());
+In this example, fetchData returns a promise that represents the result of an HTTP request. It fetches data from a URL and uses .then() to handle the asynchronous response when it becomes available.
+
+
+
+
+User
+give me 10 line more go
+ChatGPT
+
+2 / 2
+
+Certainly! Here's a more detailed example of using promises in ES6 JavaScript with 10 lines of code:
+
+javascript
+Copy code
+// Creating a promise
+const fetchData = () => {
+  return new Promise((resolve, reject) => {
+    // Simulating an asynchronous operation (e.g., fetching data)
+    setTimeout(() => {
+      const data = { message: 'Data fetched successfully' };
+      // Simulate a successful response
+      resolve(data);
+      // Simulate an error response
+      // reject(new Error('Failed to fetch data'));
+    }, 2000);
+  });
+};
+
+// Consuming the promise using .then() and .catch()
+fetchData()
+  .then(response => {
+    console.log(response.message); // Output: Data fetched successfully
+  })
+  .catch(error => {
+    console.error(error.message); // Output: Failed to fetch data
+  });
+
+// You can also use async/await to work with promises
+async function fetchDataAsync() {
+  try {
+    const response = await fetchData();
+    console.log(response.message); // Output: Data fetched successfully
+  } catch (error) {
+    console.error(error.message); // Output: Failed to fetch data
+  }
+}
+
+fetchDataAsync();
+In this example:
+
+We define a fetchData function that returns a promise. It simulates an asynchronous operation with a timeout, either resolving with data or rejecting with an error.
+
+We consume the promise using .then() to handle a successful response and .catch() to handle errors.
+
+We also demonstrate the use of async/await, which provides a more synchronous-looking way to work with promises, both in the function fetchDataAsync and its invocation.
+
+This code showcases how promises can be used for handling asynchronous operations and dealing with both successful and error scenarios.
+
+
+
+
+
+Certainly! Let's break down the provided code line by line:
+
+const fetchData = () => {: This line declares a constant variable fetchData and assigns it an arrow function. This function will be used to create and return a promise.
+
+return new Promise((resolve, reject) => {: Here, we create a new Promise. The Promise constructor takes a callback function with two parameters: resolve and reject. resolve is a function used to fulfill the promise when the asynchronous operation is successful, and reject is used to reject the promise when an error occurs.
+
+// Simulating an asynchronous operation (e.g., fetching data): This comment explains that what follows is a simulation of an asynchronous operation. In a real-world scenario, this is where you would typically perform an actual asynchronous task, like making an HTTP request.
+
+setTimeout(() => {: We use setTimeout to simulate an asynchronous delay of 2000 milliseconds (2 seconds).
+
+const data = { message: 'Data fetched successfully' };: Here, we create a sample data object representing a successful response.
+
+resolve(data);: We call the resolve function to fulfill the promise with the data object, indicating that the asynchronous operation was successful.
+
+// Simulate an error response: This is a commented-out line that would be used to simulate an error by calling the reject function if needed.
+
+}, 2000);: This closes the setTimeout callback and specifies the delay of 2000 milliseconds before the code within it is executed.
+
+};: This closes the promise creation callback.
+
+fetchData(): This line calls the fetchData function, which returns the promise created earlier. This initiates the asynchronous operation.
+
+.then(response => {: We use the .then() method to attach a callback function that will be executed when the promise is resolved (i.e., when the asynchronous operation is successful). It takes a response parameter representing the resolved value.
+
+console.log(response.message);: Within the .then() callback, we log the message property of the response object to the console, indicating a successful data fetch.
+
+}).catch(error => {: We chain a .catch() method to handle any errors that may occur during the promise execution. It takes an error parameter representing the rejected value.
+
+console.error(error.message);: Within the .catch() callback, we log the message property of the error object to the console, indicating a failed data fetch.
+
+async function fetchDataAsync() {: We declare an asynchronous function named fetchDataAsync. This function will also fetch data using promises but will use async/await syntax for a more synchronous-style code structure.
+
+const response = await fetchData();: Inside the fetchDataAsync function, we use await to pause the execution until the fetchData promise is resolved. It stores the resolved value in the response variable.
+
+console.log(response.message);: We log the message property of the response object to the console, indicating a successful data fetch within the fetchDataAsync function.
+
+} catch (error) {: We use a try...catch block to catch and handle any errors that might occur during the execution of the fetchDataAsync function.
+
+console.error(error.message);: Within the catch block, we log the message property of the caught error object to the console, indicating a failed data fetch within the fetchDataAsync function.
+
+fetchDataAsync();: Finally, we invoke the fetchDataAsync function to start the asynchronous operation using async/await.
+
+The code demonstrates how to create, consume, and handle promises using both .then() and async/await syntax to handle both successful and error scenarios in asynchronous operations.
